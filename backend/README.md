@@ -27,6 +27,47 @@
 
 ## Project setup
 
+### MongoDB connection
+
+Connection settings live in `backend/.env`:
+
+```env
+MONGODB_URI=mongodb://127.0.0.1:27017
+MONGODB_DATABASE=videoaiditor
+PORT=3000
+```
+
+Use a running local MongoDB server, or replace `MONGODB_URI` with your Atlas
+connection string. For Atlas, configure database credentials and network access.
+A local `.env` is created from `.env.example` if it did not already exist.
+Run all backend commands from the `backend` directory so dotenv finds `.env`.
+
+```text
+src/common/mongodb/
+├── monogo.ts
+└── schemas/
+    └── index.ts
+src/restapi/
+└── restapi.controller.ts
+```
+
+`monogo.ts` creates the MongoDB client and selects the database. The existing
+REST API controller connects and pings MongoDB in `onModuleInit()`, so startup
+fails if MongoDB cannot be reached. It closes the client on shutdown. No database
+service or module is used; `AppModule` registers the controller directly.
+
+Run `npm run start:dev` and visit
+`http://localhost:3000/restapi/health/db` to check connectivity. Success returns
+`{"status":"ok","database":"connected"}`; a failed health check returns HTTP 503.
+The old PostgreSQL `/health/db` route has been replaced by this route.
+
+For future endpoints, use `this.mongo.database.collection('collection_name')`
+inside `RestapiController`. Add document types to `schemas/` as needed. MongoDB
+creates collections/databases on the first write; a ping does not create them.
+The tests mock MongoDB and do not verify a live server connection.
+
+[MongoDB driver connection documentation](https://www.mongodb.com/docs/drivers/node/current/connect/).
+
 ```bash
 $ yarn install
 ```
