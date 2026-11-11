@@ -1,0 +1,191 @@
+{
+  "baseUrl": "http://localhost:3000",
+  "routes": [
+    {
+      "group": "health",
+      "name": "db health check",
+      "method": "GET",
+      "path": "/restapi/health/db",
+      "auth": false
+    },
+    {
+      "group": "auth",
+      "name": "register",
+      "method": "POST",
+      "path": "/api/v1/auth/register",
+      "auth": false,
+      "body": { "name": "string", "email": "string", "password": "string (min 8)" }
+    },
+    {
+      "group": "auth",
+      "name": "login",
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "auth": false,
+      "body": { "email": "string", "password": "string" }
+    },
+    {
+      "group": "auth",
+      "name": "current user",
+      "method": "GET",
+      "path": "/api/v1/auth/me",
+      "auth": true
+    },
+    {
+      "group": "teams",
+      "name": "create team",
+      "method": "POST",
+      "path": "/api/v1/teams",
+      "auth": true,
+      "body": { "name": "string" }
+    },
+    {
+      "group": "teams",
+      "name": "list teams",
+      "method": "GET",
+      "path": "/api/v1/teams",
+      "auth": true
+    },
+    {
+      "group": "teams",
+      "name": "get team",
+      "method": "GET",
+      "path": "/api/v1/teams/:teamId",
+      "auth": true
+    },
+    {
+      "group": "projects",
+      "name": "create project",
+      "method": "POST",
+      "path": "/api/v1/teams/:teamId/projects",
+      "auth": true,
+      "body": { "name": "string" }
+    },
+    {
+      "group": "projects",
+      "name": "list projects",
+      "method": "GET",
+      "path": "/api/v1/teams/:teamId/projects",
+      "auth": true
+    },
+    {
+      "group": "projects",
+      "name": "get project",
+      "method": "GET",
+      "path": "/api/v1/teams/:teamId/projects/:id",
+      "auth": true
+    },
+    {
+      "group": "projects",
+      "name": "update project",
+      "method": "PATCH",
+      "path": "/api/v1/teams/:teamId/projects/:id",
+      "auth": true,
+      "body": { "name": "string (optional)", "status": "active|archived|deleted (optional)" }
+    },
+    {
+      "group": "projects",
+      "name": "delete project",
+      "method": "DELETE",
+      "path": "/api/v1/teams/:teamId/projects/:id",
+      "auth": true
+    },
+    {
+      "group": "media",
+      "name": "register media",
+      "method": "POST",
+      "path": "/api/v1/teams/:teamId/projects/:projectId/media",
+      "auth": true,
+      "body": {
+        "storageKey": "string",
+        "originalFilename": "string",
+        "type": "video|audio|image",
+        "mimeType": "string",
+        "sizeBytes": "number"
+      }
+    },
+    {
+      "group": "media",
+      "name": "list media",
+      "method": "GET",
+      "path": "/api/v1/teams/:teamId/projects/:projectId/media",
+      "auth": true
+    },
+    {
+      "group": "media",
+      "name": "get media",
+      "method": "GET",
+      "path": "/api/v1/teams/:teamId/projects/:projectId/media/:id",
+      "auth": true
+    },
+    {
+      "group": "media",
+      "name": "delete media",
+      "method": "DELETE",
+      "path": "/api/v1/teams/:teamId/projects/:projectId/media/:id",
+      "auth": true
+    },
+    {
+      "group": "editor-state",
+      "name": "get editor state",
+      "method": "GET",
+      "path": "/api/v1/teams/:teamId/projects/:projectId/editor-state",
+      "auth": true
+    },
+    {
+      "group": "editor-state",
+      "name": "save editor state",
+      "method": "PUT",
+      "path": "/api/v1/teams/:teamId/projects/:projectId/editor-state",
+      "auth": true,
+      "body": {
+        "expectedVersion": "number",
+        "timeline": "EditPlan (see common/edit-plan/types.ts)",
+        "settings": "EditorSettings (see common/edit-plan/types.ts)"
+      }
+    },
+    {
+      "group": "styles",
+      "name": "list styles",
+      "method": "GET",
+      "path": "/api/v1/styles",
+      "auth": false
+    },
+    {
+      "group": "styles",
+      "name": "get style",
+      "method": "GET",
+      "path": "/api/v1/styles/:id",
+      "auth": false
+    },
+    {
+      "group": "stickers",
+      "name": "list stickers",
+      "method": "GET",
+      "path": "/api/v1/stickers",
+      "auth": false,
+      "query": { "tag": "string (optional)" }
+    },
+    {
+      "group": "stickers",
+      "name": "get sticker",
+      "method": "GET",
+      "path": "/api/v1/stickers/:id",
+      "auth": false
+    },
+    {
+      "group": "jobs",
+      "name": "get job",
+      "method": "GET",
+      "path": "/api/v1/jobs/:id",
+      "auth": true
+    },
+    {
+      "group": "jobs",
+      "name": "cancel job",
+      "method": "POST",
+      "path": "/api/v1/jobs/:id/cancel",
+      "auth": true
+    }
+  ]
+}
