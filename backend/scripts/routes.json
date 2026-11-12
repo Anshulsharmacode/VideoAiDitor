@@ -159,21 +159,6 @@
       "auth": false
     },
     {
-      "group": "stickers",
-      "name": "list stickers",
-      "method": "GET",
-      "path": "/api/v1/stickers",
-      "auth": false,
-      "query": { "tag": "string (optional)" }
-    },
-    {
-      "group": "stickers",
-      "name": "get sticker",
-      "method": "GET",
-      "path": "/api/v1/stickers/:id",
-      "auth": false
-    },
-    {
       "group": "jobs",
       "name": "get job",
       "method": "GET",

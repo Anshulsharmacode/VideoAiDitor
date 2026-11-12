@@ -201,7 +201,6 @@ async function main() {
     durationMs: 10000,
     cuts: [],
     captions: [{ id: 'c1', startMs: 0, endMs: 1000, text: 'hello world' }],
-    stickers: [],
     overlays: [],
   };
   const settings = { resolution: { width: 1080, height: 1920 }, aspectRatio: '9:16', frameRate: 30 };
@@ -246,12 +245,6 @@ async function main() {
   logStep('styles: GET /api/v1/styles');
   {
     const res = await request('GET', '/api/v1/styles');
-    ok('responds with an array (no auth required)', res.status === 200 && Array.isArray(res.json), res);
-  }
-
-  logStep('stickers: GET /api/v1/stickers');
-  {
-    const res = await request('GET', '/api/v1/stickers', { query: { tag: 'money' } });
     ok('responds with an array (no auth required)', res.status === 200 && Array.isArray(res.json), res);
   }
 

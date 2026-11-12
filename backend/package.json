@@ -20,7 +20,8 @@
     "test:cov": "vitest run --coverage",
     "test:debug": "vitest --inspect-brk --no-file-parallelism",
     "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
-    "test:routes": "node scripts/test-routes.mjs"
+    "test:routes": "node scripts/test-routes.mjs",
+    "whisper:local": "python3 scripts/whisper_server.py"
   },
   "dependencies": {
     "@nestjs/common": "^12.0.1",
