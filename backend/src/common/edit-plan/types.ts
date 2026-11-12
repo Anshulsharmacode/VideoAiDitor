@@ -19,16 +19,6 @@ export interface EditPlanCaption {
   words?: EditPlanCaptionWord[];
 }
 
-export interface EditPlanSticker {
-  id: string;
-  stickerKey: string;
-  startMs: number;
-  durationMs: number;
-  position: { x: number; y: number };
-  size: number;
-  source: 'ai' | 'manual';
-}
-
 export interface EditPlanOverlay {
   id: string;
   kind: 'title' | 'chapter' | 'broll-marker';
@@ -44,7 +34,6 @@ export interface EditPlan {
   durationMs: number;
   cuts: EditPlanCut[];
   captions: EditPlanCaption[];
-  stickers: EditPlanSticker[];
   overlays: EditPlanOverlay[];
 }
 

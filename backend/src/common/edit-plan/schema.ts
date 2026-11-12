@@ -29,16 +29,6 @@ export const editPlanCaptionSchema = z
     message: 'endMs must be after startMs',
   });
 
-export const editPlanStickerSchema = z.object({
-  id: z.string(),
-  stickerKey: z.string().min(1),
-  startMs: z.number().int().nonnegative(),
-  durationMs: z.number().int().positive(),
-  position: z.object({ x: z.number().min(0).max(1), y: z.number().min(0).max(1) }),
-  size: z.number().positive(),
-  source: z.enum(['ai', 'manual']),
-});
-
 export const editPlanOverlaySchema = z
   .object({
     id: z.string(),
@@ -58,7 +48,6 @@ export const editPlanSchema = z.object({
   durationMs: z.number().int().positive(),
   cuts: z.array(editPlanCutSchema),
   captions: z.array(editPlanCaptionSchema),
-  stickers: z.array(editPlanStickerSchema),
   overlays: z.array(editPlanOverlaySchema),
 });
 
