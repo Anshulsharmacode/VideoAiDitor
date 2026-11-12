@@ -9,8 +9,8 @@ import type { JobResponse } from './job.dto.js';
 /**
  * No queue: the pipeline/render functions write stage/status/error directly
  * onto this row as they run (see backend-architecture.md). This service is
- * read + cancel-flag only — nothing here creates a job, that happens inline
- * when the pipeline/render module is kicked off.
+ * read + cancel-flag only — jobs are created inline by whatever kicks off
+ * the pipeline/render module (e.g. MediaService.startProcessing).
  */
 @Injectable()
 export class JobService {

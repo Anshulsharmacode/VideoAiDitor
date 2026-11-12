@@ -8,7 +8,6 @@ export type PipelineStage =
   | 'transcribe'
   | 'cuts'
   | 'captions'
-  | 'stickers'
   | 'template'
   | 'save';
 

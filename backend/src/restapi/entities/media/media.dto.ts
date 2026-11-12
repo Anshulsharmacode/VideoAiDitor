@@ -32,3 +32,15 @@ export class RegisterMediaDto {
 }
 
 export type MediaResponse = Omit<MediaDocument, '_id'> & { id: string };
+
+/**
+ * The subset of a multer in-memory file object we actually use. Defined
+ * locally instead of relying on `Express.Multer.File` since neither
+ * `multer` nor `@types/multer` ship that augmentation in this project.
+ */
+export interface UploadedMediaFile {
+  originalname: string;
+  mimetype: string;
+  size: number;
+  buffer: Buffer;
+}

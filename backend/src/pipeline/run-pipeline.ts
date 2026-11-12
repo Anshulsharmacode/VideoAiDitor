@@ -1,14 +1,13 @@
 import type { Db } from 'mongodb';
 import { getCollections } from '../common/mongodb/collections.js';
+import { readFile } from '../common/storage/storage.js';
 import { parseEditPlan } from '../common/edit-plan/schema.js';
 import type {
   EditPlan,
   EditPlanCaption,
   EditPlanCut,
-  EditPlanSticker,
 } from '../common/edit-plan/types.js';
 import type { MediaDocument } from '../common/mongodb/schemas/media.schema.js';
-import type { StickerDocument } from '../common/mongodb/schemas/sticker.schema.js';
 import type { StyleDocument } from '../common/mongodb/schemas/style.schema.js';
 import type { PipelineStage } from '../common/mongodb/schemas/job.schema.js';
 
@@ -55,7 +54,7 @@ export async function runPipeline(
     if (await isCancelled()) return void (await fail('cancelled'));
 
     await setStage('transcribe');
-    const words = transcribeMedia(media);
+    const words = await transcribeMedia(media);
     if (await isCancelled()) return void (await fail('cancelled'));
 
     await setStage('cuts');
@@ -64,11 +63,6 @@ export async function runPipeline(
 
     await setStage('captions');
     const captions = generateCaptions(words);
-    if (await isCancelled()) return void (await fail('cancelled'));
-
-    await setStage('stickers');
-    const stickerCatalog = await collections.stickers.find().toArray();
-    const stickers = classifyStickers(words, stickerCatalog);
     if (await isCancelled()) return void (await fail('cancelled'));
 
     await setStage('template');
@@ -84,7 +78,6 @@ export async function runPipeline(
       durationMs: media.durationMs ?? lastWordEndMs(words),
       cuts,
       captions,
-      stickers,
       overlays: [],
     };
     const validatedPlan = parseEditPlan(plan);
@@ -135,14 +128,80 @@ async function prepareMedia(
   return media;
 }
 
-function transcribeMedia(_media: MediaDocument): TranscriptWord[] {
-  return [
-    { text: 'This', startMs: 0, endMs: 300 },
-    { text: 'is', startMs: 300, endMs: 500 },
-    { text: 'a', startMs: 500, endMs: 600 },
-    { text: 'placeholder', startMs: 600, endMs: 1200 },
-    { text: 'transcript.', startMs: 1200, endMs: 1800 },
-  ];
+interface WordsResponse {
+  words?: Array<{ word: string; start: number; end: number }>;
+}
+
+function toTranscriptWords(result: WordsResponse): TranscriptWord[] {
+  return (result.words ?? []).map((word) => ({
+    text: word.word.trim(),
+    startMs: Math.round(word.start * 1000),
+    endMs: Math.round(word.end * 1000),
+  }));
+}
+
+/**
+ * Dispatches to whichever provider is configured — matches
+ * backend-architecture.md's "Groq/Gemini keys or local Whisper URL" config
+ * row. Defaults to the free, self-hosted local server (scripts/whisper_server.py)
+ * so nothing costs money until TRANSCRIPTION_PROVIDER is explicitly set to
+ * "groq".
+ */
+async function transcribeMedia(media: MediaDocument): Promise<TranscriptWord[]> {
+  const provider = process.env.TRANSCRIPTION_PROVIDER ?? 'local';
+  if (provider === 'groq') return transcribeWithGroq(media);
+  return transcribeWithLocalWhisper(media);
+}
+
+/**
+ * scripts/whisper_server.py — a faster-whisper (CPU, int8) wrapper run as a
+ * separate local process. Free, no API key, no network dependency.
+ */
+async function transcribeWithLocalWhisper(media: MediaDocument): Promise<TranscriptWord[]> {
+  const url = process.env.WHISPER_LOCAL_URL ?? 'http://127.0.0.1:8090/transcribe';
+
+  const audio = await readFile(media.storageKey);
+  const form = new FormData();
+  form.append('file', new Blob([new Uint8Array(audio)], { type: media.mimeType }), media.originalFilename);
+
+  const response = await fetch(url, { method: 'POST', body: form });
+  if (!response.ok) {
+    throw new Error(
+      `Local whisper transcription failed (${response.status}): ${await response.text()}. ` +
+        'Is scripts/whisper_server.py running?',
+    );
+  }
+
+  return toTranscriptWords((await response.json()) as WordsResponse);
+}
+
+/**
+ * Groq's hosted Whisper endpoint — free tier available, but still an
+ * external network dependency and API key. Opt in with
+ * TRANSCRIPTION_PROVIDER=groq.
+ */
+async function transcribeWithGroq(media: MediaDocument): Promise<TranscriptWord[]> {
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) throw new Error('GROQ_API_KEY is not set');
+
+  const audio = await readFile(media.storageKey);
+  const form = new FormData();
+  form.append('file', new Blob([new Uint8Array(audio)], { type: media.mimeType }), media.originalFilename);
+  form.append('model', 'whisper-large-v3-turbo');
+  form.append('response_format', 'verbose_json');
+  form.append('timestamp_granularities[]', 'word');
+
+  const response = await fetch('https://api.groq.com/openai/v1/audio/transcriptions', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${apiKey}` },
+    body: form,
+  });
+
+  if (!response.ok) {
+    throw new Error(`Groq transcription failed (${response.status}): ${await response.text()}`);
+  }
+
+  return toTranscriptWords((await response.json()) as WordsResponse);
 }
 
 function detectCuts(_words: TranscriptWord[]): EditPlanCut[] {
@@ -160,13 +219,6 @@ function generateCaptions(words: TranscriptWord[]): EditPlanCaption[] {
       words,
     },
   ];
-}
-
-function classifyStickers(
-  _words: TranscriptWord[],
-  _stickerCatalog: StickerDocument[],
-): EditPlanSticker[] {
-  return [];
 }
 
 function pickTemplate(

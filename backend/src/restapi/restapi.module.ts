@@ -14,14 +14,12 @@ import { EditorStateController } from './entities/editor-state/editor-state.cont
 import { EditorStateService } from './entities/editor-state/editor-state.service.js';
 import { StyleController } from './entities/style/style.controller.js';
 import { StyleService } from './entities/style/style.service.js';
-import { StickerController } from './entities/sticker/sticker.controller.js';
-import { StickerService } from './entities/sticker/sticker.service.js';
 import { JobController } from './entities/job/job.controller.js';
 import { JobService } from './entities/job/job.service.js';
 
 /**
  * Single module for the whole REST API — every entity (user, team, project,
- * media, editor-state, style, sticker, job) is a controller+service pair
+ * media, editor-state, style, job) is a controller+service pair
  * registered here rather than its own NestJS module. JWT config lives here
  * too, once, instead of being redeclared per entity.
  */
@@ -42,7 +40,6 @@ import { JobService } from './entities/job/job.service.js';
     MediaController,
     EditorStateController,
     StyleController,
-    StickerController,
     JobController,
   ],
   providers: [
@@ -53,7 +50,6 @@ import { JobService } from './entities/job/job.service.js';
     MediaService,
     EditorStateService,
     StyleService,
-    StickerService,
     JobService,
   ],
 })
