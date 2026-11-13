@@ -1,0 +1,3 @@
+node_module
+.venv
+__pycache__
