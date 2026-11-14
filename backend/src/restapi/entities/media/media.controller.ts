@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
   Param,
   Post,
   UploadedFile,
@@ -46,18 +45,6 @@ export class MediaController {
     @Body() dto: RegisterMediaDto,
   ) {
     return this.mediaService.register(teamId, projectId, user.userId, dto);
-  }
-
-  /** Kicks off transcribe -> cuts -> captions -> template -> save. */
-  @Post(':id/process')
-  @HttpCode(202)
-  process(
-    @CurrentUser() user: AuthenticatedUser,
-    @Param('teamId') teamId: string,
-    @Param('projectId') projectId: string,
-    @Param('id') id: string,
-  ) {
-    return this.mediaService.startProcessing(teamId, projectId, user.userId, id);
   }
 
   @Get()

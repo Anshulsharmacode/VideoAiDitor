@@ -4,10 +4,8 @@ import { extname } from 'node:path';
 import { MONGO_DB } from '../../../common/mongodb/database.module.js';
 import { getCollections } from '../../../common/mongodb/collections.js';
 import { newId, newTimestamps } from '../../../common/mongodb/schemas/base.schema.js';
-import type { JobDocument } from '../../../common/mongodb/schemas/job.schema.js';
 import type { MediaDocument, MediaType } from '../../../common/mongodb/schemas/media.schema.js';
 import { saveFile } from '../../../common/storage/storage.js';
-import { runPipeline } from '../../../pipeline/run-pipeline.js';
 import { assertTeamAccess } from '../../common/team-access.js';
 import { assertProjectInTeam } from '../../common/project-access.js';
 import type { MediaResponse, RegisterMediaDto, UploadedMediaFile } from './media.dto.js';
@@ -54,42 +52,6 @@ export class MediaService {
     };
     await media.insertOne(doc);
     return this.toResponse(doc);
-  }
-
-  /**
-   * Creates a `jobs` row and kicks off the pipeline (transcribe -> cuts ->
-   * captions -> template -> save) as a fire-and-forget async
-   * call, per backend-architecture.md — no queue. The caller polls
-   * GET /api/v1/jobs/:id for progress and reads the result from
-   * GET .../editor-state once it completes.
-   */
-  async startProcessing(
-    teamId: string,
-    projectId: string,
-    userId: string,
-    mediaId: string,
-  ): Promise<{ jobId: string }> {
-    await assertTeamAccess(this.db, teamId, userId);
-    await assertProjectInTeam(this.db, teamId, projectId);
-    await this.findInProject(projectId, mediaId);
-
-    const { jobs } = getCollections(this.db);
-    const job: JobDocument = {
-      _id: newId(),
-      teamId,
-      projectId,
-      kind: 'pipeline',
-      status: 'running',
-      stage: 'prepare',
-      error: null,
-      cancelRequested: false,
-      ...newTimestamps(),
-    };
-    await jobs.insertOne(job);
-
-    void runPipeline(this.db, { jobId: job._id, teamId, projectId, mediaId });
-
-    return { jobId: job._id };
   }
 
   async register(

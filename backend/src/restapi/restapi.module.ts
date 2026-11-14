@@ -10,18 +10,14 @@ import { ProjectController } from './entities/project/project.controller.js';
 import { ProjectService } from './entities/project/project.service.js';
 import { MediaController } from './entities/media/media.controller.js';
 import { MediaService } from './entities/media/media.service.js';
-import { EditorStateController } from './entities/editor-state/editor-state.controller.js';
-import { EditorStateService } from './entities/editor-state/editor-state.service.js';
 import { StyleController } from './entities/style/style.controller.js';
 import { StyleService } from './entities/style/style.service.js';
-import { JobController } from './entities/job/job.controller.js';
-import { JobService } from './entities/job/job.service.js';
 
 /**
  * Single module for the whole REST API — every entity (user, team, project,
- * media, editor-state, style, job) is a controller+service pair
- * registered here rather than its own NestJS module. JWT config lives here
- * too, once, instead of being redeclared per entity.
+ * media, style) is a controller+service pair registered here rather than
+ * its own NestJS module. JWT config lives here too, once, instead of being
+ * redeclared per entity.
  */
 @Module({
   imports: [
@@ -38,9 +34,7 @@ import { JobService } from './entities/job/job.service.js';
     TeamController,
     ProjectController,
     MediaController,
-    EditorStateController,
     StyleController,
-    JobController,
   ],
   providers: [
     JwtAuthGuard,
@@ -48,9 +42,7 @@ import { JobService } from './entities/job/job.service.js';
     TeamService,
     ProjectService,
     MediaService,
-    EditorStateService,
     StyleService,
-    JobService,
   ],
 })
 export class RestapiModule {}
