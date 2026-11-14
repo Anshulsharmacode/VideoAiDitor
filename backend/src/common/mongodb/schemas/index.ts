@@ -3,6 +3,5 @@ export * from './user.schema.js';
 export * from './team.schema.js';
 export * from './project.schema.js';
 export * from './media.schema.js';
-export * from './style.schema.js';
 export * from './subscription.schema.js';
 export * from './credit-transaction.schema.js';

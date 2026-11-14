@@ -10,13 +10,11 @@ import { ProjectController } from './entities/project/project.controller.js';
 import { ProjectService } from './entities/project/project.service.js';
 import { MediaController } from './entities/media/media.controller.js';
 import { MediaService } from './entities/media/media.service.js';
-import { StyleController } from './entities/style/style.controller.js';
-import { StyleService } from './entities/style/style.service.js';
 
 /**
  * Single module for the whole REST API — every entity (user, team, project,
- * media, style) is a controller+service pair registered here rather than
- * its own NestJS module. JWT config lives here too, once, instead of being
+ * media) is a controller+service pair registered here rather than its own
+ * NestJS module. JWT config lives here too, once, instead of being
  * redeclared per entity.
  */
 @Module({
@@ -34,7 +32,6 @@ import { StyleService } from './entities/style/style.service.js';
     TeamController,
     ProjectController,
     MediaController,
-    StyleController,
   ],
   providers: [
     JwtAuthGuard,
@@ -42,7 +39,6 @@ import { StyleService } from './entities/style/style.service.js';
     TeamService,
     ProjectService,
     MediaService,
-    StyleService,
   ],
 })
 export class RestapiModule {}
