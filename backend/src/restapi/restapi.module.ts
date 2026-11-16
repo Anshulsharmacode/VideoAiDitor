@@ -10,6 +10,8 @@ import { ProjectController } from './entities/project/project.controller.js';
 import { ProjectService } from './entities/project/project.service.js';
 import { MediaController } from './entities/media/media.controller.js';
 import { MediaService } from './entities/media/media.service.js';
+import { WhisperService } from '../common/media-processing/whisper.service.js';
+import { BackgroundRemovalService } from '../common/media-processing/background-removal.service.js';
 
 /**
  * Single module for the whole REST API — every entity (user, team, project,
@@ -39,6 +41,9 @@ import { MediaService } from './entities/media/media.service.js';
     TeamService,
     ProjectService,
     MediaService,
+    WhisperService,
+    BackgroundRemovalService,
   ],
+  exports: [WhisperService, BackgroundRemovalService],
 })
 export class RestapiModule {}

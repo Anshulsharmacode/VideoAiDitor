@@ -22,6 +22,7 @@ export class ProjectService {
       createdBy: userId,
       name: dto.name.trim(),
       status: 'active',
+      editPlan: null,
       ...newTimestamps(),
     };
     await projects.insertOne(project);
