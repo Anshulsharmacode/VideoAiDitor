@@ -6,13 +6,17 @@ import { getCollections } from '../../../common/mongodb/collections.js';
 import { newId, newTimestamps } from '../../../common/mongodb/schemas/base.schema.js';
 import type { MediaDocument, MediaType } from '../../../common/mongodb/schemas/media.schema.js';
 import { saveFile } from '../../../common/storage/storage.js';
+import { WhisperService } from '../../../common/media-processing/whisper.service.js';
 import { assertTeamAccess } from '../../common/team-access.js';
 import { assertProjectInTeam } from '../../common/project-access.js';
 import type { MediaResponse, RegisterMediaDto, UploadedMediaFile } from './media.dto.js';
 
 @Injectable()
 export class MediaService {
-  constructor(@Inject(MONGO_DB) private readonly db: Db) {}
+  constructor(
+    @Inject(MONGO_DB) private readonly db: Db,
+    private readonly whisperService: WhisperService,
+  ) {}
 
   /**
    * Streams the uploaded file straight to local disk (see
@@ -36,6 +40,11 @@ export class MediaService {
     const storageKey = `uploads/${teamId}/${mediaId}/original${extension}`;
     await saveFile(storageKey, file.buffer);
 
+    const transcribe =
+      type === 'video' || type === 'audio'
+        ? await this.whisperService.transcribe(file.buffer, file.originalname)
+        : null;
+
     const { media } = getCollections(this.db);
     const doc: MediaDocument = {
       _id: mediaId,
@@ -48,6 +57,7 @@ export class MediaService {
       sizeBytes: file.size,
       durationMs: null,
       status: 'ready',
+      transcribe,
       ...newTimestamps(),
     };
     await media.insertOne(doc);
@@ -75,6 +85,7 @@ export class MediaService {
       sizeBytes: dto.sizeBytes,
       durationMs: null,
       status: 'ready',
+      transcribe: null,
       ...newTimestamps(),
     };
     await media.insertOne(doc);
