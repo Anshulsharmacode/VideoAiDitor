@@ -1,0 +1,246 @@
+{
+  "_id": "reel-hook-explainer-01",
+  "audio": {
+    "musicUrl": "assets/audio/upbeat-loop.mp3",
+    "volume": 0.3,
+    "duckUnderVoice": true
+  },
+  "background": {
+    "type": "color",
+    "value": "#111827"
+  },
+  "canvas": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30
+  },
+  "createdAt": "2026-11-15T10:25:04.842Z",
+  "durationMs": 45000,
+  "layers": [
+    {
+      "id": "subject-hook",
+      "type": "video-slot",
+      "role": "subject",
+      "startMs": 0,
+      "endMs": 3000,
+      "x": 0,
+      "y": 0,
+      "width": 1,
+      "height": 1,
+      "zIndex": 5,
+      "fit": "cover",
+      "source": "storage://teams/demo/media/demo/bg-removed.mp4",
+      "trim": {
+        "startMs": 0,
+        "endMs": 3000
+      }
+    },
+    {
+      "id": "hook-text",
+      "type": "text",
+      "startMs": 0,
+      "endMs": 3000,
+      "x": 0.08,
+      "y": 0.06,
+      "width": 0.84,
+      "height": 0.15,
+      "zIndex": 8,
+      "text": "nobody explains this right...",
+      "style": {
+        "fontFamily": "Inter",
+        "fontSize": 68,
+        "color": "#ffde00"
+      }
+    },
+    {
+      "id": "card-panel",
+      "type": "image",
+      "startMs": 3000,
+      "endMs": 40000,
+      "x": 0.08,
+      "y": 0.08,
+      "width": 0.84,
+      "height": 0.56,
+      "zIndex": 2,
+      "source": "assets/cards/receipt-card.png"
+    },
+    {
+      "id": "subject-explain",
+      "type": "video-slot",
+      "role": "subject",
+      "startMs": 3000,
+      "endMs": 40000,
+      "x": 0.37,
+      "y": 0.12,
+      "width": 0.26,
+      "height": 0.16,
+      "zIndex": 6,
+      "fit": "cover",
+      "source": "storage://teams/demo/media/demo/bg-removed.mp4",
+      "trim": {
+        "startMs": 3000,
+        "endMs": 40000
+      }
+    },
+    {
+      "id": "concept-title",
+      "type": "text",
+      "startMs": 3000,
+      "endMs": 40000,
+      "x": 0.14,
+      "y": 0.3,
+      "width": 0.72,
+      "height": 0.06,
+      "zIndex": 7,
+      "text": "inside the transformer",
+      "style": {
+        "fontFamily": "Inter",
+        "fontSize": 40,
+        "color": "#1f2937"
+      }
+    },
+    {
+      "id": "concept-slot",
+      "type": "content-slot",
+      "role": "concept-explainer",
+      "startMs": 3000,
+      "endMs": 40000,
+      "x": 0.14,
+      "y": 0.37,
+      "width": 0.72,
+      "height": 0.22,
+      "zIndex": 4
+    },
+    {
+      "id": "subject-cta",
+      "type": "video-slot",
+      "role": "subject",
+      "startMs": 40000,
+      "endMs": null,
+      "x": 0,
+      "y": 0,
+      "width": 1,
+      "height": 1,
+      "zIndex": 5,
+      "fit": "cover",
+      "source": "storage://teams/demo/media/demo/bg-removed.mp4",
+      "trim": {
+        "startMs": 40000,
+        "endMs": 45000
+      }
+    },
+    {
+      "id": "cta-text",
+      "type": "text",
+      "startMs": 40000,
+      "endMs": null,
+      "x": 0.1,
+      "y": 0.4,
+      "width": 0.8,
+      "height": 0.2,
+      "zIndex": 8,
+      "text": "follow for more 🔥",
+      "style": {
+        "fontFamily": "Inter",
+        "fontSize": 72,
+        "color": "#ffffff"
+      }
+    },
+    {
+      "id": "caption-slot",
+      "type": "caption-slot",
+      "role": "transcript",
+      "startMs": 0,
+      "endMs": null,
+      "x": 0.08,
+      "y": 0.68,
+      "width": 0.84,
+      "height": 0.09,
+      "zIndex": 10,
+      "style": {
+        "fontFamily": "Inter",
+        "fontSize": 60,
+        "color": "#ffffff",
+        "highlightColor": "#ffde00",
+        "animation": "word-pop",
+        "maxWordsPerLine": 4
+      },
+      "words": [
+        {
+          "text": "so",
+          "startMs": 500,
+          "endMs": 700
+        },
+        {
+          "text": "what",
+          "startMs": 700,
+          "endMs": 900
+        },
+        {
+          "text": "is",
+          "startMs": 900,
+          "endMs": 1000
+        },
+        {
+          "text": "a",
+          "startMs": 1000,
+          "endMs": 1050
+        },
+        {
+          "text": "transformer",
+          "startMs": 1050,
+          "endMs": 1600
+        },
+        {
+          "text": "it",
+          "startMs": 4200,
+          "endMs": 4350
+        },
+        {
+          "text": "uses",
+          "startMs": 4350,
+          "endMs": 4550
+        },
+        {
+          "text": "self-attention",
+          "startMs": 4550,
+          "endMs": 5200
+        },
+        {
+          "text": "to",
+          "startMs": 5200,
+          "endMs": 5300
+        },
+        {
+          "text": "weigh",
+          "startMs": 5300,
+          "endMs": 5550
+        },
+        {
+          "text": "every",
+          "startMs": 5550,
+          "endMs": 5750
+        },
+        {
+          "text": "word",
+          "startMs": 5750,
+          "endMs": 6000
+        }
+      ]
+    },
+    {
+      "id": "logo",
+      "type": "image",
+      "startMs": 0,
+      "endMs": null,
+      "x": 0.85,
+      "y": 0.02,
+      "width": 0.1,
+      "height": 0.1,
+      "zIndex": 20,
+      "source": "assets/logo.png"
+    }
+  ],
+  "name": "Hook + Explainer + CTA",
+  "updatedAt": "2026-11-15T19:04:26.810Z"
+}
